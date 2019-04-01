@@ -15,8 +15,17 @@ class Rebase:
     def __init__(self):
         tempDictionary = {}
         rebaseData = open('link_allenz.txt')
-        keys = re.findall(r'<1>[A-z]*', rebaseData.read())
-        values = re.finadall(r'<5>[A-z\^\?]*', rebaseData.read())
+        keys = re.findall(r'<1>[A-z.0-9]*', rebaseData.read())
+        index = 0
+        for key in keys:
+            keys[index] = key.split('<1>')[1]
+            index = index + 1
+        rebaseData.seek(0, 0)
+        values = re.findall(r'<5>[A-Z\^\?]*', rebaseData.read())
+        index = 0
+        for value in values:
+            values[index] = value.split('<5>')[1]
+            index = index + 1
         index = 0
         for value in values:
             tempDictionary[keys[index]] = self.makeRe(value)
@@ -43,6 +52,8 @@ class Rebase:
         return enzymes
 
 
-
-
-
+reb = Rebase()
+strand = sys.argv[1]
+results = reb.findAllEnzymes(strand)
+for result in results:
+    print(result)
